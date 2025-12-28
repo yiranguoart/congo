@@ -1,0 +1,41 @@
+{{ define "main" }}
+<div class="single-product-container">
+  {{/* Large Top Image */}}
+  {{ $image := .Resources.GetMatch .Params.feature }}
+  {{ if $image }}
+  <img class="product-header-image" src="{{ $image.RelPermalink }}" alt="{{ .Title }}">
+  {{ end }}
+
+  <div class="product-details">
+    <h1>{{ .Title }}</h1>
+
+    <div class="prose dark:prose-invert">
+      {{ .Content }}
+    </div>
+
+    {{/* Meta Information */}}
+    <div class="product-meta">
+      {{ with .Params.price }}
+      <div class="meta-item">
+        <strong>Price</strong>
+        <span>{{ . }}</span>
+      </div>
+      {{ end }}
+
+      {{ with .Params.specs }}
+      <div class="meta-item">
+        <strong>Specs</strong>
+        <span>{{ . }}</span>
+      </div>
+      {{ end }}
+
+      {{ with .Params.fiber_type }}
+      <div class="meta-item">
+        <strong>Fiber</strong>
+        <span>{{ . }}</span>
+      </div>
+      {{ end }}
+    </div>
+  </div>
+</div>
+{{ end }}

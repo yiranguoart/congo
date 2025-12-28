@@ -1,8 +1,57 @@
 {{ define "main" }}
-  {{ $partial := print "home/" .Site.Params.homepage.layout ".html" }}
-  {{ if templates.Exists ( printf "_partials/%s" $partial) }}
-    {{ partial $partial . }}
-  {{ else }}
-    {{ partial "home/page.html" . }}
-  {{ end }}
+<div class="homepage-container">
+    {{/* Hero Slideshow */}}
+    <section class="hero-slideshow">
+        <div class="slideshow-container">
+            {{/* Get random images from products */}}
+            {{ $products := where .Site.RegularPages "Section" "products" }}
+            {{ $shuffled := shuffle $products }}
+            {{ range first 5 $shuffled }}
+                {{ $image := .Resources.GetMatch .Params.feature }}
+                {{ if $image }}
+                    <div class="slide fade">
+                        <img src="{{ $image.RelPermalink }}" alt="Paper Texture">
+                    </div>
+                {{ end }}
+            {{ end }}
+        </div>
+    </section>
+
+    {{/* Product Grid */}}
+    <section class="product-grid-section">
+        <div class="grid-container">
+            {{ range where .Site.RegularPages "Section" "products" }}
+                <a href="{{ .Permalink }}" class="product-card">
+                    <div class="card-image">
+                        {{ $image := .Resources.GetMatch .Params.feature }}
+                        {{ if $image }}
+                            <img src="{{ $image.RelPermalink }}" alt="{{ .Title }}">
+                        {{ end }}
+                    </div>
+                    <div class="card-info">
+                        <h3>{{ .Title }}</h3>
+                    </div>
+                </a>
+            {{ end }}
+        </div>
+    </section>
+</div>
+
+<script>
+    // Simple Slideshow Script
+    let slideIndex = 0;
+    showSlides();
+
+    function showSlides() {
+        let i;
+        let slides = document.getElementsByClassName("slide");
+        for (i = 0; i < slides.length; i++) {
+            slides[i].style.display = "none";  
+        }
+        slideIndex++;
+        if (slideIndex > slides.length) {slideIndex = 1}    
+        slides[slideIndex-1].style.display = "block";  
+        setTimeout(showSlides, 4000); // Change image every 4 seconds
+    }
+</script>
 {{ end }}
